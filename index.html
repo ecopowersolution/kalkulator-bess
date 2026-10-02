@@ -1518,9 +1518,10 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
       <p>Tuhle stránku posíláme EIFlexi ke kontrole, než kalkulátor nasadíme na web
       k našim projektům. Počítá podle vašeho modelu — výchozí hodnoty nejsou naše odhady,
       ale přímo vstupy z reportu <em>Typové výnosy BESS 5 MW</em> (listy 0,5c a 0,25c).</p>
-      <p>Rekonstrukci jsme si proti modelu ověřili: s výchozími hodnotami a vynulovanými
-      náklady mimo model vychází řádek <em>čisté výnosy</em> u obou konfigurací
-      (5 MW/10 MWh i 5 MW/20 MWh) za všech deset let na nulovou odchylku. Použitý postup:</p>
+      <p>Rekonstrukci jsme si proti modelu ověřili: s původními vstupy reportu
+      (19 EUR/MW/h, kurz 24,2) a vynulovanými náklady mimo model vychází řádek
+      <em>čisté výnosy</em> u obou konfigurací (5 MW/10 MWh i 5 MW/20 MWh) za všech
+      deset let na nulovou odchylku. Použitý postup:</p>
       <ul class="deliv-plain">
         <li>výnos = měrný výnos × 8 600 h × MW</li>
         <li>po marži = výnos × (1 − marže za agregaci)</li>
@@ -1528,18 +1529,24 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
         <li>regulované platby = rezervovaný příkon × 12 × MW + (sítě + systémové + ekodaň) × nakoupený objem</li>
         <li>čistý výnos = po marži − regulované platby / kurz</li>
       </ul>
-      <p><strong>Tři věci bychom rádi potvrdili:</strong></p>
+      <p><strong>Co jsme po vašich připomínkách z 1. 10. upravili:</strong></p>
       <ol class="deliv-plain">
-        <li><strong>Počet provozních hodin.</strong> V listu uvedený není. Zpětným dopočtem
-        z výnosů a měrných výnosů vychází 8 600 hodin ročně, ne 8 760 — shodně ve všech
-        letech i v obou konfiguracích. Je to záměr a čím je ta rezerva daná?</li>
-        <li><strong>Měrný výnos 19 EUR/MW/h jako výchozí.</strong> V modelu je devatenáctka,
-        ale psali jste 24. 9., že rok 2026 vychází zatím kolem 15 a že po doplnění strategií
-        čekáte úroveň okolo 18. Nechceme veřejně ukazovat číslo optimističtější, než jaké
-        sami očekáváte — má tam zůstat 19, nebo raději 18?</li>
-        <li><strong>Publikace.</strong> Uvádíme EIFlexi jako zdroj dat a píšeme, že model
-        počítá pouze s obchodní arbitráží a výnosy z podpůrných služeb v něm nejsou.
-        Je to takto v pořádku?</li>
+        <li><strong>Měrný výnos</strong> — výchozí hodnota 18 EUR/MW/h pro dvouhodinovou
+        konfiguraci (místo 19 z reportu).</li>
+        <li><strong>Počet cyklů a směnný kurz</strong> už nejsou vstupy — počítá se
+        s konstantami 1,7 cyklu denně (průměr na roční úrovni) a 24,45 Kč/EUR,
+        zmíněné jsou jen drobným písmem pod výsledky.</li>
+        <li><strong>Regulované platby</strong> — skupina přejmenovaná na „cenová rozhodnutí
+        ERÚ" (ne „platby podle EIFlexi"), s poznámkou, že sazby odpovídají ČEZ Distribuce,
+        u jiných distribučních soustav se mírně liší a s novou tarifní strukturou od 2027
+        se mohou změnit. Marže za agregaci je oddělená ve vlastní skupině.</li>
+        <li><strong>Kontext arbitráže</strong> — v úvodu doplněno, že arbitráž je základní
+        scénář a spodní mez výnosů, že jde o denní i vnitrodenní trh, proč služby výkonové
+        rovnováhy v modelu nejsou a kdy se do nich úložiště nabídne (jednotky dní v roce).</li>
+        <li><strong>8 600 hodin</strong> — vysvětleno pod výsledky: ~160 hodin ročně
+        (asi 7 dní) je vyhrazeno údržbě bez výnosu.</li>
+        <li><strong>Financování</strong> — doplněna poznámka, že hodnoty jsou bez úroků
+        a splátek úvěru, které se promítají do anuity a návratnost prodlužují.</li>
       </ol>
       <p class="disclaimer">Jako vzor je nastavený náš projekt Černice (7,2 MW). Parametry
       i výkon si můžete libovolně přepsat, počítá se ve vašem prohlížeči a nic se neodesílá.
@@ -1555,9 +1562,14 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
       <h2>Spočítejte si ekonomiku projektu</h2>
       <p>Kalkulátor počítá podle ekonomického modelu agregátora EIFlexi — výchozí
       hodnoty jsou přímo vstupy tohoto modelu, ne naše odhady. Model zahrnuje pouze
-      obchodní arbitráž na denním a vnitrodenním trhu; výnosy z poskytování služeb
-      výkonové rovnováhy v něm nejsou, jde tedy o konzervativní scénář.
-      <strong>Akviziční cena projektu je předmětem jednání</strong>, proto je ve
+      obchodní arbitráž na denním a vnitrodenním trhu a představuje základní scénář,
+      spodní mez výnosů. Služby výkonové rovnováhy v něm nejsou záměrně: s rostoucí
+      nabídkou jejich výnosy klesají a provozovat úložiště výhradně na ně dnes není
+      ekonomicky racionální. Pokud se naskytnou příležitosti, kdy vynesou víc než
+      arbitráž — typicky při kombinaci výpadků elektráren, odstávek a vysokých cen —
+      úložiště se do nich nabídne; statisticky jde ale o jednotky dní v roce, které
+      nelze předvídat ani spolehlivě promítnout do modelu.</p>
+      <p><strong>Akviziční cena projektu je předmětem jednání</strong>, proto je ve
       výchozím nastavení nulová — dosaďte si vlastní předpoklad a uvidíte, jak se
       promítne do návratnosti. Přepsat si můžete kterýkoli parametr, výpočet proběhne
       rovnou ve vašem prohlížeči a nic se neodesílá.</p>
@@ -1569,18 +1581,17 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
         <p class="kalk-skupina">Konfigurace úložiště</p>
           <label>Instalovaný výkon <span>MW</span><input type="number" id="k-mw-cernice" value="7.2" step="0.1" min="0.1"></label>
           <label>Kapacita úložiště <span>MWh</span><input type="number" id="k-mwh-cernice" value="14.4" step="0.5" min="0.5"></label>
-          <label>Měrný výnos v 1. roce <span>EUR/MW/h</span><input type="number" id="k-vynos-cernice" value="19" step="0.5" min="0"></label>
-          <label>Průměrný počet cyklů <span>za den</span><input type="number" id="k-cykly-cernice" value="1.7" step="0.1" min="0"></label>
+          <label>Měrný výnos v 1. roce <span>EUR/MW/h</span><input type="number" id="k-vynos-cernice" value="18" step="0.5" min="0"></label>
         <p class="kalk-skupina">Investice</p>
           <label>Cena technologie <span>mil. Kč/MW</span><input type="number" id="k-capex-cernice" value="10" step="0.5" min="0"></label>
           <label>Akviziční cena projektu <span>mil. Kč</span><input type="number" id="k-akvizice-cernice" value="0" step="1" min="0"></label>
-        <p class="kalk-skupina">Platby podle modelu EIFlexi</p>
+        <p class="kalk-skupina">Agregace</p>
           <label>Marže za agregaci <span>%</span><input type="number" id="k-marze-cernice" value="15" step="0.5" min="0" max="100"></label>
+        <p class="kalk-skupina">Regulované platby (cenová rozhodnutí ERÚ)</p>
           <label>Rezervovaný příkon <span>Kč/MW/měsíc</span><input type="number" id="k-prikon-cernice" value="22100" step="100" min="0"></label>
           <label>Použití sítí <span>Kč/MWh</span><input type="number" id="k-site-cernice" value="106.22" step="1" min="0"></label>
           <label>Systémové služby <span>Kč/MWh</span><input type="number" id="k-syssl-cernice" value="164.22" step="1" min="0"></label>
           <label>Ekologická daň <span>Kč/MWh</span><input type="number" id="k-ekodan-cernice" value="28.3" step="0.1" min="0"></label>
-          <label>Směnný kurz <span>Kč/EUR</span><input type="number" id="k-kurz-cernice" value="24.2" step="0.1" min="1"></label>
         <p class="kalk-skupina">Provozní náklady mimo model</p>
           <label>Údržba technologie <span>tis. EUR/MW/rok</span><input type="number" id="k-udrzba-cernice" value="5" step="0.5" min="0"></label>
           <label>Ostatní provozní náklady <span>tis. EUR/rok</span><input type="number" id="k-ostatni-cernice" value="80" step="5" min="0"></label>
@@ -1604,25 +1615,33 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
       </div>
     </div>
     <p class="disclaimer" style="margin-top:18px">Výpočet je orientační a nepředstavuje
-    nabídku ve smyslu § 1732 občanského zákoníku. Hodnoty jsou před zdaněním a před náklady
-    financování. Model pokrývá prvních deset let provozu, pro která má agregátor podklad —
-    životnost úložiště je delší, takže výsledek „nad 10 let“ neznamená, že se investice
-    nevrátí, ale že návratnost přesahuje modelovaný horizont. Výnos v čase klesá podle
-    očekávaného vývoje cenových rozpětí na trhu, nakoupený objem podle degradační křivky
-    kapacity; obojí je převzato z modelu. Případné budoucí výnosy z poskytování služeb
-    výkonové rovnováhy výpočet nezahrnuje — ty by ekonomiku dále zlepšily.</p>
+    nabídku ve smyslu § 1732 občanského zákoníku. Hodnoty jsou před zdaněním a bez nákladů
+    financování — úroky a splátky případného úvěru se promítají do anuity a návratnost
+    prodlužují. Model počítá s 8 600 provozními hodinami ročně: zbylých zhruba 160 hodin,
+    tedy asi sedm dní, je vyhrazeno údržbě, při které úložiště výnos negeneruje. Průměrně
+    1,7 cyklu denně (průměr na roční úrovni) a přepočet
+    kurzem 24,45 Kč/EUR jsou v modelu konstanty. Regulované platby vycházejí z cenových rozhodnutí ERÚ a odpovídají
+    sazbám ČEZ Distribuce, k níž se naše projekty připojují — u jiných distribučních soustav
+    se mírně liší a s novou tarifní strukturou od roku 2027 se mohou změnit. Model pokrývá
+    prvních deset let provozu, pro která má agregátor podklad — životnost úložiště je delší,
+    takže výsledek „nad 10 let“ neznamená, že se investice nevrátí, ale že návratnost
+    přesahuje modelovaný horizont. Výnos v čase klesá podle očekávaného vývoje cenových
+    rozpětí na trhu, nakoupený objem podle degradační křivky kapacity; obojí je převzato
+    z modelu. Případné výnosy ze služeb výkonové rovnováhy by ekonomiku dále zlepšily.</p>
   </div>
 </section>
 
 <script>
 (function () {
   var sl = "cernice";
-  var pole = ['mw', 'mwh', 'vynos', 'cykly', 'capex', 'akvizice', 'marze', 'prikon', 'site', 'syssl', 'ekodan', 'kurz', 'udrzba', 'ostatni', 'najem', 'rust'];
+  var pole = ['mw', 'mwh', 'vynos', 'capex', 'akvizice', 'marze', 'prikon', 'site', 'syssl', 'ekodan', 'udrzba', 'ostatni', 'najem', 'rust'];
   // Řady z modelu EIFlexi: pokles měrného výnosu (trh) a degradace kapacity.
   var profil = [1.0, 0.921411, 0.840337, 0.768758, 0.748295, 0.728505, 0.666316, 0.650132, 0.634184, 0.618868];
   var degrad = [1.0, 0.9726, 0.9392, 0.9129, 0.8886, 0.8651, 0.844, 0.8235, 0.8033, 0.7839];
-  var HODIN = 8600;          // provozních hodin v roce, implicitní v modelu
-  var MERNY_05C = 19, MERNY_025C = 28.88;
+  var HODIN = 8600;          // provozních hodin v roce (~160 h/rok údržba)
+  var CYKLY = 1.7;        // průměr cyklů denně — konstanta modelu
+  var KURZ = 24.45;          // Kč/EUR — konstanta modelu
+  var MERNY_05C = 18, MERNY_025C = 28.88;
   var vychozi = {};
   function el(k) { return document.getElementById("k-" + k + "-" + sl); }
   function out(k) { return document.getElementById("k-o-" + k + "-" + sl); }
@@ -1636,17 +1655,17 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
     var h = {};
     pole.forEach(function (k) { h[k] = parseFloat(el(k).value) || 0; });
     var capex = h.mw * h.capex + h.akvizice;                 // mil. Kč
-    var opexZaklad = h.udrzba * h.mw * 1000 + h.ostatni * 1000 + h.najem / h.kurz;  // EUR
+    var opexZaklad = h.udrzba * h.mw * 1000 + h.ostatni * 1000 + h.najem / KURZ;  // EUR
     var kum = 0, navrat = null, radky = "", soucet = 0, zisk1 = 0;
     for (var i = 0; i < profil.length; i++) {
       // Výnos podle modelu: měrný výnos × hodiny × výkon, snížený o marži agregátora.
       var vynosEur = h.vynos * profil[i] * HODIN * h.mw * (1 - h.marze / 100);
       // Regulované platby: rezervovaný příkon z výkonu, zbytek z nakoupeného objemu.
-      var nakoupeno = h.mwh * h.cykly * 365 * degrad[i];     // MWh
+      var nakoupeno = h.mwh * CYKLY * 365 * degrad[i];       // MWh
       var regCzk = h.prikon * 12 * h.mw + (h.site + h.syssl + h.ekodan) * nakoupeno;
       var opexEur = opexZaklad * Math.pow(1 + h.rust / 100, i);
-      var vynosMil = vynosEur * h.kurz / 1e6;
-      var nakladyMil = (regCzk + opexEur * h.kurz) / 1e6;
+      var vynosMil = vynosEur * KURZ / 1e6;
+      var nakladyMil = (regCzk + opexEur * KURZ) / 1e6;
       var zisk = vynosMil - nakladyMil;
       if (i === 0) zisk1 = zisk;
       var pred = kum; kum += zisk; soucet += zisk;
