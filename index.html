@@ -1545,8 +1545,9 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
         rovnováhy v modelu nejsou a kdy se do nich úložiště nabídne (jednotky dní v roce).</li>
         <li><strong>8 600 hodin</strong> — vysvětleno pod výsledky: ~160 hodin ročně
         (asi 7 dní) je vyhrazeno údržbě bez výnosu.</li>
-        <li><strong>Financování</strong> — doplněna poznámka, že hodnoty jsou bez úroků
-        a splátek úvěru, které se promítají do anuity a návratnost prodlužují.</li>
+        <li><strong>Financování</strong> — volitelné vstupy: výše úvěru, úroková sazba
+        a splatnost. Dopočítá se anuitní splátka a návratnost vlastních zdrojů z toku
+        po splátkách; bez vyplněného úvěru se nic nemění.</li>
       </ol>
       <p class="disclaimer">Jako vzor je nastavený náš projekt Černice (7,2 MW). Parametry
       i výkon si můžete libovolně přepsat, počítá se ve vašem prohlížeči a nic se neodesílá.
@@ -1585,6 +1586,10 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
         <p class="kalk-skupina">Investice</p>
           <label>Cena technologie <span>mil. Kč/MW</span><input type="number" id="k-capex-cernice" value="10" step="0.5" min="0"></label>
           <label>Akviziční cena projektu <span>mil. Kč</span><input type="number" id="k-akvizice-cernice" value="0" step="1" min="0"></label>
+        <p class="kalk-skupina">Financování (volitelné)</p>
+          <label>Výše úvěru <span>mil. Kč</span><input type="number" id="k-uver-cernice" value="0" step="1" min="0"></label>
+          <label>Úroková sazba <span>% p.a.</span><input type="number" id="k-sazba-cernice" value="6" step="0.1" min="0"></label>
+          <label>Splatnost úvěru <span>roky</span><input type="number" id="k-splatnost-cernice" value="10" step="1" min="1" max="30"></label>
         <p class="kalk-skupina">Agregace</p>
           <label>Marže za agregaci <span>%</span><input type="number" id="k-marze-cernice" value="15" step="0.5" min="0" max="100"></label>
         <p class="kalk-skupina">Regulované platby (cenová rozhodnutí ERÚ)</p>
@@ -1605,19 +1610,23 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
         <h3>Výsledek</h3>
         <div class="kalk-out">
           <div><span class="kalk-lbl">Investice celkem (technologie + projekt)</span><strong id="k-o-capex-cernice">—</strong></div>
+          <div><span class="kalk-lbl">Z toho vlastní zdroje</span><strong id="k-o-vlastni-cernice">—</strong></div>
+          <div><span class="kalk-lbl">Roční splátka úvěru (anuita)</span><strong id="k-o-splatka-cernice">—</strong></div>
           <div><span class="kalk-lbl">Provozní zisk v 1. roce</span><strong id="k-o-zisk1-cernice">—</strong></div>
           <div><span class="kalk-lbl">Průměrný roční zisk (10 let)</span><strong id="k-o-prumer-cernice">—</strong></div>
           <div><span class="kalk-lbl">Kumulovaný zisk za 10 let</span><strong id="k-o-kumul-cernice">—</strong></div>
-          <div><span class="kalk-lbl">Prostá návratnost</span><strong id="k-o-navrat-cernice">—</strong></div>
+          <div><span class="kalk-lbl">Prostá návratnost celé investice</span><strong id="k-o-navrat-cernice">—</strong></div>
+          <div><span class="kalk-lbl">Návratnost vlastních zdrojů (po splátkách)</span><strong id="k-o-navratvl-cernice">—</strong></div>
         </div>
         <h3 style="margin-top:22px">Průběh po letech (mil. Kč)</h3>
         <div class="table-scroll"><table class="data data--slim"><thead><tr><th>Rok</th><th class="num">Výnos</th><th class="num">Náklady</th><th class="num">Zisk</th></tr></thead><tbody id="k-rows-cernice"></tbody></table></div>
       </div>
     </div>
     <p class="disclaimer" style="margin-top:18px">Výpočet je orientační a nepředstavuje
-    nabídku ve smyslu § 1732 občanského zákoníku. Hodnoty jsou před zdaněním a bez nákladů
-    financování — úroky a splátky případného úvěru se promítají do anuity a návratnost
-    prodlužují. Model počítá s 8 600 provozními hodinami ročně: zbylých zhruba 160 hodin,
+    nabídku ve smyslu § 1732 občanského zákoníku. Hodnoty jsou před zdaněním. Financování
+    je volitelný vstup: z výše úvěru, úrokové sazby a splatnosti se počítá anuitní splátka
+    a návratnost vlastních zdrojů — bez vyplněného úvěru jsou hodnoty bez nákladů
+    financování. Model počítá s 8 600 provozními hodinami ročně: zbylých zhruba 160 hodin,
     tedy asi sedm dní, je vyhrazeno údržbě, při které úložiště výnos negeneruje. Průměrně
     1,7 cyklu denně (průměr na roční úrovni) a přepočet
     kurzem 24,45 Kč/EUR jsou v modelu konstanty. Regulované platby vycházejí z cenových rozhodnutí ERÚ a odpovídají
@@ -1634,7 +1643,7 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
 <script>
 (function () {
   var sl = "cernice";
-  var pole = ['mw', 'mwh', 'vynos', 'capex', 'akvizice', 'marze', 'prikon', 'site', 'syssl', 'ekodan', 'udrzba', 'ostatni', 'najem', 'rust'];
+  var pole = ['mw', 'mwh', 'vynos', 'capex', 'akvizice', 'uver', 'sazba', 'splatnost', 'marze', 'prikon', 'site', 'syssl', 'ekodan', 'udrzba', 'ostatni', 'najem', 'rust'];
   // Řady z modelu EIFlexi: pokles měrného výnosu (trh) a degradace kapacity.
   var profil = [1.0, 0.921411, 0.840337, 0.768758, 0.748295, 0.728505, 0.666316, 0.650132, 0.634184, 0.618868];
   var degrad = [1.0, 0.9726, 0.9392, 0.9129, 0.8886, 0.8651, 0.844, 0.8235, 0.8033, 0.7839];
@@ -1656,7 +1665,15 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
     pole.forEach(function (k) { h[k] = parseFloat(el(k).value) || 0; });
     var capex = h.mw * h.capex + h.akvizice;                 // mil. Kč
     var opexZaklad = h.udrzba * h.mw * 1000 + h.ostatni * 1000 + h.najem / KURZ;  // EUR
+    // Volitelné financování: anuitní splátka z výše úvěru, sazby a splatnosti.
+    var uver = Math.min(h.uver, capex), splatka = 0;
+    if (uver > 0 && h.splatnost >= 1) {
+      var r = h.sazba / 100;
+      splatka = r > 0 ? uver * r / (1 - Math.pow(1 + r, -h.splatnost)) : uver / h.splatnost;
+    }
+    var vlastni = capex - uver;
     var kum = 0, navrat = null, radky = "", soucet = 0, zisk1 = 0;
+    var kumVl = 0, navratVl = null;
     for (var i = 0; i < profil.length; i++) {
       // Výnos podle modelu: měrný výnos × hodiny × výkon, snížený o marži agregátora.
       var vynosEur = h.vynos * profil[i] * HODIN * h.mw * (1 - h.marze / 100);
@@ -1670,17 +1687,27 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
       if (i === 0) zisk1 = zisk;
       var pred = kum; kum += zisk; soucet += zisk;
       if (navrat === null && kum >= capex && zisk > 0) navrat = i + (capex - pred) / zisk;
+      // Tok pro vlastní zdroje: provozní zisk minus splátka po dobu splácení.
+      var tokVl = zisk - (i < h.splatnost ? splatka : 0);
+      var predVl = kumVl; kumVl += tokVl;
+      if (navratVl === null && kumVl >= vlastni && tokVl > 0)
+        navratVl = i + (vlastni - predVl) / tokVl;
       radky += "<tr><td>" + (2027 + i) + "</td><td class='num'>" + vynosMil.toFixed(1).replace(".", ",")
              + "</td><td class='num'>" + nakladyMil.toFixed(1).replace(".", ",")
              + "</td><td class='num'>" + zisk.toFixed(1).replace(".", ",") + "</td></tr>";
     }
     document.getElementById("k-rows-" + sl).innerHTML = radky;
     out("capex").textContent = cislo(capex);
+    out("vlastni").textContent = uver > 0 ? cislo(vlastni) : "—";
+    out("splatka").textContent = uver > 0
+      ? cislo(splatka) + " po dobu " + Math.round(h.splatnost) + " let" : "—";
     out("zisk1").textContent = cislo(zisk1);
     out("prumer").textContent = cislo(soucet / 10);
     out("kumul").textContent = cislo(soucet);
     out("navrat").textContent = navrat === null
       ? "nad 10 let" : navrat.toFixed(1).replace(".", ",") + " roku";
+    out("navratvl").textContent = uver <= 0 ? "—"
+      : (navratVl === null ? "nad 10 let" : navratVl.toFixed(1).replace(".", ",") + " roku");
 
     // Obě pole s investicí jsou v milionech. Když někdo zadá rovnou koruny,
     // výsledek zůstane formálně správný, ale je o šest řádů vedle — upozorníme.
@@ -1690,6 +1717,9 @@ figure.plan figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted
         + mezery((h.akvizice / 1000).toFixed(0)) + " miliardám korun — nezadali jste ji omylem v korunách?");
     if (h.capex >= 1000)
       hlasky.push("Cena technologie " + mezery(String(h.capex)) + " mil. Kč za MW vypadá na překlep — pole je v milionech korun.");
+    if (h.uver > capex)
+      hlasky.push("Úvěr je vyšší než celková investice — počítá se jen do její výše ("
+        + cislo(capex) + ").");
 
     // Měrný výnos závisí na poměru výkonu a kapacity — model má dva body.
     var hod = h.mw > 0 ? h.mwh / h.mw : 0;
